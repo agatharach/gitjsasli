@@ -8,10 +8,22 @@
     <link href="./styles.css" rel="stylesheet"> 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body onload="startGame()">
+<body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-10" id="game-canvas" ></div>
+            <div class="col-2" id="score-canvas"></div>
+            <div class="col-8 text-center" id="game-canvas" >
+                <div class="main-menu" id="main-menu">
+                    <div class="row h-100 align-items-center">
+                        <div class="col-12">
+                            <h1 class="background-putih">ASPAL : Edisi Truk</h1>
+                            <button type="button" onclick="startGame()" class="btn btn-primary btn-lg">Block level button</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-2"></div>
         </div>
     </div>
     <script src="./script.js"></script>

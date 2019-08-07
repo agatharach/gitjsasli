@@ -1,10 +1,3 @@
-
-
-
-
-    
-
-
 // var myGamePiece;
 const otherCars = [];
 // var myScore;
@@ -23,10 +16,10 @@ const posisiAwalMyCar = 850
 
 // (width, height, color, x, y, type) {
 function startGame() {
+    document.getElementById("game-canvas").removeChild(document.getElementById("main-menu"));
     const newLocal = canvasHeight - carHeight;
-    myCar = new componentA(carWidth, carHeight, 235,newLocal , "myCar");
-    // otherCar = new componentA(100, 150, "red", 235, canvasHeight - carHeight, "otherCar");
-    // myScore = new component("30px", "Consolas", 280, 40, "text");
+    myCar = new componentA(carWidth, carHeight, 235,newLocal , "myCar");    
+    myScore = new componentScore(0, 30,"white");
     for (let i=0;i < 10; i++){
           x = 0;
           y = 0;
@@ -45,7 +38,7 @@ function startGame() {
               mySideWalks.push(new componenthidup(590,height2,"white",width2,height2));                    
           }
       }
-
+    myScoreArea.start()
     myGameArea.start();
 }
 
@@ -57,7 +50,7 @@ var myGameArea = {
         this.context = this.canvas.getContext("2d");
         document.getElementById("game-canvas").appendChild(this.canvas);
         this.frameNo = 0;
-        this.interval = setInterval(updateGameArea, 5);
+        this.interval = setInterval(updateGameArea, 2);
         window.addEventListener('keydown', function (e) {
             e.preventDefault();
             myGameArea.keys = (myGameArea.keys || []);
@@ -74,6 +67,29 @@ var myGameArea = {
 }
 
 
+var myScoreArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 150;
+        this.canvas.height = 400;
+        this.context = this.canvas.getContext("2d");
+        document.getElementById("score-canvas").appendChild(this.canvas);
+        this.interval = setInterval(updateScoreArea, 50);
+        // window.addEventListener('keydown', function (e) {
+        //     e.preventDefault();
+        //     myGameArea.keys = (myGameArea.keys || []);
+        //     myGameArea.keys[e.keyCode] = (e.type == "keydown");
+        // })
+        // window.addEventListener('keyup', function (e) {
+        //     myGameArea.keys[e.keyCode] = (e.type == "keydown");
+        // })
+
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
 function componenthidup(x, y, color, width, height) {
     this.width = width;
     this.height = height;    
@@ -86,7 +102,24 @@ function componenthidup(x, y, color, width, height) {
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
-      
+
+
+function componentScore(x, y, color){ 
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.update = function() {
+        ctx = myScoreArea.context;
+        ctx.font = "20px Georgia"
+        // ctx.fillStyle = "red";
+        ctx.fillText(this.text, this.x, this.y);
+    }
+}
+
+
+
+
+
 function componentA(width, height, x, y, type) {
     this.type = type;
     this.score = 0;
@@ -154,16 +187,25 @@ function componentA(width, height, x, y, type) {
     }
 }
 
-function updateGameArea() {
-    myGameArea.clear();
-    myGameArea.frameNo += 1;
 
+function updateScoreArea() {
+    myScoreArea.clear()
+    myScore.text="SCORE: " + Math.floor(myGameArea.frameNo/10);
+    myScore.update();
+}
+
+
+
+function updateGameArea() {
     // check crash with other
     for (i = 0; i < otherCars.length; i += 1) {
         if (myCar.crashWithOtherCars(otherCars[i])) {
+            alert("nabrak")
             return;
         } 
     }
+    myGameArea.frameNo += 1;
+    myGameArea.clear();
     
     // marka
     if (myGameArea.frameNo == 1 || everyinterval(160)) {
@@ -251,16 +293,13 @@ function updateGameArea() {
         } else {
             if (myGameArea.keys && myGameArea.keys[37]) {myCar.x -= 1; }  //kiri
             if (myGameArea.keys && myGameArea.keys[39]) {myCar.x += 1; } // kanan
-            if (myGameArea.keys && myGameArea.keys[38]) {myCar.y -= 0.5; } //atas
-            if (myGameArea.keys && myGameArea.keys[40]) {myCar.y += 1; } //bawah
+            if (myGameArea.keys && myGameArea.keys[38]) {
+                if (myCar.y >= 0) {myCar.y -= 0.5; }} //atas
+            if (myGameArea.keys && myGameArea.keys[40]) {
+                if (myCar.y <= canvasHeight - carHeight){ myCar.y += 1;} } //bawah
         }
     }
-    
 
-
-    // myScore.text="SCORE: " + myGameArea.frameNo;
-    // myScore.update();    
-    // myCar.newPos();
     myCar.update();
 ////
 }
