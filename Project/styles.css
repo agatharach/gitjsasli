@@ -1,3 +1,7 @@
 #car {
     visibility: hidden;
 }
+
+canvas {
+    background-color: grey;
+}

@@ -18,7 +18,7 @@ const canvasWidth = 610;
 const canvasHeight = 610;
 const carWidth = 100;
 const carHeight = 150;
-const color = "red"
+// const color = "red"
 const posisiAwalMyCar = 850
 
 // (width, height, color, x, y, type) {
@@ -52,11 +52,10 @@ function startGame() {
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        document.getElementById("game-canvas").appendChild(this.canvas);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 5);
         window.addEventListener('keydown', function (e) {
@@ -80,10 +79,13 @@ function componenthidup(x, y, color, width, height) {
     this.height = height;    
     this.x = x;
     this.y = y;
+    this.color = color;
     this.update = function() {
         ctx = myGameArea.context;
-        ctx.fillStyle = color;
+        ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+}
       
 function componentA(width, height, x, y, type) {
     this.type = type;
@@ -98,7 +100,7 @@ function componentA(width, height, x, y, type) {
         ctx = myGameArea.context;
         if (this.type == "text") {
             ctx.font = this.width + " " + this.height;
-            ctx.fillStyle = color;
+            ctx.fillStyle = "red";
             ctx.fillText(this.text, this.x, this.y);
         } else if (this.type === "myCar"){
             img = document.getElementById("car");
@@ -126,8 +128,6 @@ function componentA(width, height, x, y, type) {
         } else {
             gap_y = othertop - mybottom // ketika mycar diatas
         }
-
-
         // lawan dikanan
         if (this.x < otherobj.x){
             if (myright - 10 >= otherleft && gap_y <= -5){
@@ -157,53 +157,60 @@ function componentA(width, height, x, y, type) {
 function updateGameArea() {
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    // marka
-    if (myGameArea.frameNo == 1 || everyinterval(80)) {
-        canvas_height = myGameArea.canvas.height;
-        gap = 30;
-        height = 80;
-        myMarkas.push(new componenthidup(127.5, (canvas_height-height+gap), "white", 15, 80));
-        myMarkas.push(new componenthidup(372.5, (canvas_height-height+gap), "white", 15, 80));
-    }
 
-    // sidewalk
-    if (myGameArea.frameNo == 1 || everyinterval(40)) {
-        height = 40
-        if (i%2 == 0){
-            mySideWalks.push(new componenthidup(0,height,"black",20,height));        
-        }else {
-            mySideWalks.push(new componenthidup(590,height,"white",20,height));                    
-        }
-    }    
-
-    for (i = 0; i < myMarkas.length; i += 1) {
-        myMarkas[i].y += -1;
-        myMarkas[i].update();
-    }
-
-    for (i = 0; i < mySideWalks.length; i += 1) {
-        myMarkas[i].y += -1;
-        myMarkas[i].update();
-    }
-
-    if(myGameArea.frameNo > 1000 && everyinterval(40)){
-        myMarkas.shift();
-        console.log(myMarkas);
-    }
-
-    if(myGameArea.frameNo > 1000 && everyinterval(80)){
-        mySideWalks.shift();
-        console.log(mySideWalks);
-    }
-################
+    // check crash with other
     for (i = 0; i < otherCars.length; i += 1) {
         if (myCar.crashWithOtherCars(otherCars[i])) {
             return;
         } 
     }
+    
+    // marka
+    if (myGameArea.frameNo == 1 || everyinterval(160)) {
+        canvas_height = myGameArea.canvas.height;
+        gap = 30;
+        height = 80;
+        myMarkas.push(new componenthidup(202.5, - height, "white", 15, -80));
+        myMarkas.push(new componenthidup(392.5, -height, "white", 15, -80));
+    }
 
+    // sidewalk
+    if (myGameArea.frameNo == 1 || everyinterval(80)) {
+        height = 40
+        mySideWalks.push(new componenthidup(0,-height,"white",20,height));        
+        mySideWalks.push(new componenthidup(590,-height,"white",20,height));                    
+        mySideWalks.push(new componenthidup(0,-height*2,"black",20,height));                    
+        mySideWalks.push(new componenthidup(590,-height*2,"black",20,height));                    
+    }    
+
+    for (i = 0; i < myMarkas.length; i += 1) {
+        myMarkas[i].y += 1;
+        myMarkas[i].update();
+    }
+
+    for (i = 0; i < mySideWalks.length; i += 1) {
+        mySideWalks[i].y += 1;
+        mySideWalks[i].update();
+    }
+
+    if(myGameArea.frameNo > 1000 && everyinterval(160)){
+        myMarkas.shift();
+        myMarkas.shift();
+        // console.log(myMarkas);
+    }
+
+    if(myGameArea.frameNo > 1000 && everyinterval(80)){
+        mySideWalks.shift();
+        mySideWalks.shift();
+        mySideWalks.shift();
+        mySideWalks.shift();
+        // console.log(mySideWalks);
+    }
+
+// ################
+    // generate new otherCar
     if (myGameArea.frameNo == 1 || everyinterval(350)) {
-        lineChoice = [45, 235, 425]
+        lineChoice = [65, 255, 445]
         posisiy = - carHeight
         // (width, height, x, y, type) {
         lineIndex = Math.floor(Math.random()*lineChoice.length);
@@ -222,7 +229,6 @@ function updateGameArea() {
     // delete
     if (myGameArea.frameNo > 1000 && everyinterval(350)){
         otherCars.shift()
-        console.log(otherCars)
     }
     
 
@@ -245,8 +251,8 @@ function updateGameArea() {
         } else {
             if (myGameArea.keys && myGameArea.keys[37]) {myCar.x -= 1; }  //kiri
             if (myGameArea.keys && myGameArea.keys[39]) {myCar.x += 1; } // kanan
-            if (myGameArea.keys && myGameArea.keys[38]) {myCar.y -= 0.5; } //bawah
-            if (myGameArea.keys && myGameArea.keys[40]) {myCar.y += 0.5; } //atas
+            if (myGameArea.keys && myGameArea.keys[38]) {myCar.y -= 0.5; } //atas
+            if (myGameArea.keys && myGameArea.keys[40]) {myCar.y += 1; } //bawah
         }
     }
     
@@ -256,7 +262,7 @@ function updateGameArea() {
     // myScore.update();    
     // myCar.newPos();
     myCar.update();
-######
+////
 }
 
 function everyinterval(n) {
