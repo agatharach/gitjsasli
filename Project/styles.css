@@ -2,6 +2,15 @@
     visibility: hidden;
 }
 
-canvas {
-    background-color: grey;
+#game-canvas canvas{
+    background-color: grey !important;
+}
+
+.background-putih{
+    background-color: white;
+}
+
+.main-menu{
+    background-image: url("./assets/asphalt.jpg");
+    height: 610px ;
 }
