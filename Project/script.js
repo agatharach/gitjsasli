@@ -1,10 +1,3 @@
-
-
-
-
-    
-
-
 // var myGamePiece;
 const otherCars = [];
 // var myScore;
@@ -15,7 +8,7 @@ var mySideWalks = [];
 
 let img = document.getElementById("car");
 const canvasWidth = 610;
-const canvasHeight = 610;
+const canvasHeight = 640;
 const carWidth = 100;
 const carHeight = 150;
 // const color = "red"
@@ -27,26 +20,28 @@ function startGame() {
     myCar = new componentA(carWidth, carHeight, 235,newLocal , "myCar");
     // otherCar = new componentA(100, 150, "red", 235, canvasHeight - carHeight, "otherCar");
     // myScore = new component("30px", "Consolas", 280, 40, "text");
-    for (let i=0;i < 10; i++){
-          x = 0;
-          y = 0;
-          width1 = 15;
-          height1 = 80;
-          width2 = 20;
-          height2 = 40;
-          gep = 30;
+    for (let i=0;i < 5; i++){
+        x = 0;
+        y = 0;
+        width1 = 15;
+        height1 = 80;
+        gep = 80;
 
-          myMarkas.push(new componenthidup(127.5,0+gep,"white",width1,height1));
-          myMarkas.push(new componenthidup(372.5,0+gep,"white",width1,height1));  
-
-          if (i%2 == 0){
-              mySideWalks.push(new componenthidup(0,height2,"black",width2,height2));        
-          }else {
-              mySideWalks.push(new componenthidup(590,height2,"white",width2,height2));                    
-          }
-      }
-
-    myGameArea.start();
+        myMarkas.push(new componenthidup(202.5,(i*(height1+gep)),"white",width1,height1));
+        myMarkas.push(new componenthidup(392.5,(i*(height1+gep)),"white",width1,height1));
+    }
+    for(let j=0; j < 17; j++){
+        width2 = 20;
+        height2 = 40;
+        if(j%2 === 0){
+            mySideWalks.push(new componenthidup(590,canvasHeight-height2*j,"white",20,height2));                    
+            mySideWalks.push(new componenthidup(0,canvasHeight-height2*j,"white",20,height2));
+        }else{
+            mySideWalks.push(new componenthidup(590,canvasHeight-height2*j,"black",20,height2));
+            mySideWalks.push(new componenthidup(0,canvasHeight-height2*j,"black",20,height2));         
+        } 
+    }
+      myGameArea.start();
 }
 
 var myGameArea = {
@@ -166,12 +161,11 @@ function updateGameArea() {
     }
     
     // marka
-    if (myGameArea.frameNo == 1 || everyinterval(160)) {
+    if (myGameArea.frameNo == 40 || everyinterval(160)) {
         canvas_height = myGameArea.canvas.height;
-        gap = 30;
         height = 80;
-        myMarkas.push(new componenthidup(202.5, - height, "white", 15, -80));
-        myMarkas.push(new componenthidup(392.5, -height, "white", 15, -80));
+        myMarkas.push(new componenthidup(202.5, - height, "white", 15, 80));
+        myMarkas.push(new componenthidup(392.5, -height, "white", 15, 80));
     }
 
     // sidewalk
