@@ -29,11 +29,14 @@ const cointHeight = 50;
 // const color = "red"
 const posisiAwalMyCar = 850
 var myMusic
+var coinMusic = new sound("./assets/koin.wav")
+var crashMusic = new sound("./assets/crash.wav")
 // (width, height, color, x, y, type) {
 
 function startPage(){
     myMusic = new sound("./assets/sound.mp3");
     myMusic.play();
+
 }
 
 function startGame() {
@@ -262,6 +265,7 @@ function updateGameArea() {
             clearInterval(myGameArea.interval);
             modal = document.getElementById("myModal");
             modal.style.setProperty('display','block','important')
+            crashMusic.play()
             return;
         } 
     }
@@ -271,6 +275,7 @@ function updateGameArea() {
     for (j = 0; j < myCoints.length; j += 1) {
         if (myCar.crashWithCoint(myCoints[j])) {
             myCoints.pop(j);
+            coinMusic.play()
             myGameArea.score += 50;
         } 
     }
