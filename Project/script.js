@@ -7,7 +7,7 @@ var mySideWalks = [];
 
 ////modal
 // Get the modal
-
+var modal
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
@@ -59,10 +59,10 @@ function startGame() {
       myScoreArea.start()
       myGameArea.start()
      
-      let modal = document.getElementById("myModal");
-      modal.style.setAttribute('style','display:block !important')
+      
       
 }
+
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -223,7 +223,8 @@ function updateGameArea() {
         if (myCar.crashWithOtherCars(otherCars[i])) {
             myMusic.stop()
             clearInterval(myGameArea.interval);
-            // modal.style.setProperty('display', 'flex', 'important');
+            modal = document.getElementById("myModal");
+            modal.style.setProperty('display','block','important')
             return;
         } 
     }
@@ -363,14 +364,7 @@ function everyinterval(n) {
 // When the user clicks the button, open the modal 
 
 
-// When the user clicks on <span> (x), close the modal
 span.onclick = function() {
   modal.style.display = "none";
 }
 
-// When the user clicks anywhere outside of the modal, close it
-// window.onclick = function(event) {
-//   if (event.target == modal) {
-//     modal.style.display = "none";
-//   }
-// }
