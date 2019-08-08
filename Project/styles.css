@@ -2,6 +2,10 @@
     visibility: hidden;
 }
 
+#koin {
+    visibility: hidden;
+}
+
 #game-canvas canvas{
     background-color: grey !important;
 }

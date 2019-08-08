@@ -4,13 +4,13 @@ const otherCars = [];
 var myCar
 var myMarkas = [];
 var mySideWalks = [];
-
-
-let img = document.getElementById("car");
+var myCoints = [];
 const canvasWidth = 610;
 const canvasHeight = 640;
 const carWidth = 100;
 const carHeight = 150;
+const cointWidth = 40;
+const cointHeight = 50;
 // const color = "red"
 const posisiAwalMyCar = 850
 
@@ -54,6 +54,7 @@ var myGameArea = {
         this.context = this.canvas.getContext("2d");
         document.getElementById("game-canvas").appendChild(this.canvas);
         this.frameNo = 0;
+        this.score = 0;
         this.interval = setInterval(updateGameArea, 2);
         window.addEventListener('keydown', function (e) {
             e.preventDefault();
@@ -126,7 +127,6 @@ function componentScore(x, y, color){
 
 function componentA(width, height, x, y, type) {
     this.type = type;
-    this.score = 0;
     this.width = width;
     this.height = height;   
     this.x = x;
@@ -145,6 +145,9 @@ function componentA(width, height, x, y, type) {
         } else if (this.type === "otherCar"){
             img = document.getElementById("car");
             ctx.drawImage(img, this.x, this.y, this.width, this.height);
+        } else if (this.type === "koin"){
+            imgkoin = document.getElementById("koin");
+            ctx.drawImage(imgkoin, this.x, this.y, this.width, this.height);
         }
     }
 
@@ -187,17 +190,42 @@ function componentA(width, height, x, y, type) {
         } else if (myright > 590) {
             return 'kanan'
         }
-        return 
+    }
+
+    this.crashWithCoint = (coint) => {
+        let myleft = this.x;
+        let myright = this.x + (this.width);
+        let mytop = this.y;
+        let mybottom = this.y + (this.height);
+        let cointleft = coint.x;
+        let cointright = coint.x + (coint.width);
+        let cointtop = coint.y;
+        let cointbottom = coint.y + (coint.height);
+        let gap_y
+
+        if (this.y > coint.y){
+            gap_y= mytop - cointbottom
+        }
+        // lawan dikanan
+        if (this.x < coint.x){
+            if (myright  >= cointleft && gap_y <= 0){
+                return true
+            }
+        } else if (this.x >= coint.x) {
+            if (cointright >= myleft && gap_y <= 0){
+                return true
+            }
+        }
+        return false;
     }
 }
 
 
 function updateScoreArea() {
     myScoreArea.clear()
-    myScore.text="SCORE: " + Math.floor(myGameArea.frameNo/10);
+    myScore.text=`SCORE:   ${Math.floor(myGameArea.frameNo/50)+myGameArea.score}`;
     myScore.update();
 }
-
 
 
 function updateGameArea() {
@@ -206,6 +234,14 @@ function updateGameArea() {
         if (myCar.crashWithOtherCars(otherCars[i])) {
             alert("nabrak")
             return;
+        } 
+    }
+
+    // check crash with coints
+    for (j = 0; j < myCoints.length; j += 1) {
+        if (myCar.crashWithCoint(myCoints[j])) {
+            myCoints.pop(j);
+            myGameArea.score += 50;
         } 
     }
     myGameArea.frameNo += 1;
@@ -271,11 +307,34 @@ function updateGameArea() {
         otherCars[i].update();
         
     }
+
+    // generate coint
+    if (myGameArea.frameNo == 700 || everyinterval(700)) {
+        lineChoice = [85, 275, 465]
+        posisiy = - cointHeight-carHeight-50
+        // (width, height, x, y, type) {
+        lineIndex = Math.floor(Math.random()*lineChoice.length);
+        line = lineChoice[lineIndex]
+
+        myCoints.push(new componentA(cointWidth, cointHeight, line, posisiy, "koin"));
+    }
+
+    // console.log(myCoints)
+
+    for (i = 0; i < myCoints.length; i += 1) {
+        myCoints[i].y += 1;
+        myCoints[i].update();
+        
+    }
     // delete
     if (myGameArea.frameNo > 1000 && everyinterval(350)){
-        otherCars.shift()
+        otherCars.shift();
     }
-    
+
+    // if (myGameArea.frameNo > 2000 && everyinterval(1000)){
+    //     myCoints.shift();
+    // }
+
 
     // cek crashside
     let checkCrash = myCar.crashWithSide()
