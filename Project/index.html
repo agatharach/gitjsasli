@@ -8,7 +8,7 @@
     <link href="./styles.css" rel="stylesheet"> 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body>
+<body onload="startPage()">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-2" id="score-canvas"></div>
@@ -21,13 +21,22 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
             <div class="col-2"></div>
         </div>
     </div>
     <script src="./script.js"></script>
-    <img id="car" width="" height="30" src="./assets/treg.png" alt="Car">
+    <img id="car1" class="car" height="30" src="./assets/treg.png" alt="Car">
+    <img id="car2" class="car" height="30" src="./assets/othercar1_crpped.png" alt="Car">
+    <img id="car3" class="car" height="30" src="./assets/f1_crpped.png" alt="Car">
+
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p>Some text in the Modal..</p>
+        </div>
+    </div>
 </body>
 </html>
 
