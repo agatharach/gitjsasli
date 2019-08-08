@@ -4,7 +4,22 @@ const otherCars = [];
 var myCar
 var myMarkas = [];
 var mySideWalks = [];
+
+
+////modal
+// Get the modal
+var modal
 var myCoints = [];
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+//////////////////
+let img = document.getElementById("car");
+
+
+
+
 const canvasWidth = 610;
 const canvasHeight = 640;
 const carWidth = 100;
@@ -13,14 +28,20 @@ const cointWidth = 40;
 const cointHeight = 50;
 // const color = "red"
 const posisiAwalMyCar = 850
-
+var myMusic
 // (width, height, color, x, y, type) {
+
+function startPage(){
+    myMusic = new sound("./assets/sound.mp3");
+    myMusic.play();
+}
+
 function startGame() {
     document.getElementById("game-canvas").removeChild(document.getElementById("main-menu"));
     const newLocal = canvasHeight - carHeight;
     myCar = new componentA(carWidth, carHeight, 235,newLocal , "myCar");
     myScore = new componentScore(0, 30,"white");
-   
+    
     for (let i=0;i < 5; i++){
         x = 0;
         y = 0;
@@ -43,8 +64,12 @@ function startGame() {
         } 
     }
       myScoreArea.start()
-      myGameArea.start();
+      myGameArea.start()
+     
+      
+      
 }
+
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -70,7 +95,6 @@ var myGameArea = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
-
 
 var myScoreArea = {
     canvas : document.createElement("canvas"),
@@ -122,9 +146,6 @@ function componentScore(x, y, color){
 }
 
 
-
-
-
 function componentA(width, height, x, y, type) {
     this.type = type;
     this.width = width;
@@ -140,10 +161,13 @@ function componentA(width, height, x, y, type) {
             ctx.fillStyle = "red";
             ctx.fillText(this.text, this.x, this.y);
         } else if (this.type === "myCar"){
-            img = document.getElementById("car");
+            img = document.getElementById("car3");
             ctx.drawImage(img, this.x, this.y, this.width, this.height);
-        } else if (this.type === "otherCar"){
-            img = document.getElementById("car");
+        } else if (this.type === "otherCar1"){
+            img = document.getElementById("car2");
+            ctx.drawImage(img, this.x, this.y, this.width, this.height);
+        } else if (this.type === "otherCar2"){
+            img = document.getElementById("car1");
             ctx.drawImage(img, this.x, this.y, this.width, this.height);
         } else if (this.type === "koin"){
             imgkoin = document.getElementById("koin");
@@ -223,7 +247,9 @@ function componentA(width, height, x, y, type) {
 
 function updateScoreArea() {
     myScoreArea.clear()
+
     myScore.text=`SCORE:   ${Math.floor(myGameArea.frameNo/50)+myGameArea.score}`;
+
     myScore.update();
 }
 
@@ -232,10 +258,14 @@ function updateGameArea() {
     // check crash with other
     for (i = 0; i < otherCars.length; i += 1) {
         if (myCar.crashWithOtherCars(otherCars[i])) {
-            alert("nabrak")
+            myMusic.stop()
+            clearInterval(myGameArea.interval);
+            modal = document.getElementById("myModal");
+            modal.style.setProperty('display','block','important')
             return;
         } 
     }
+
 
     // check crash with coints
     for (j = 0; j < myCoints.length; j += 1) {
@@ -244,6 +274,7 @@ function updateGameArea() {
             myGameArea.score += 50;
         } 
     }
+
     myGameArea.frameNo += 1;
     myGameArea.clear();
     
@@ -296,8 +327,13 @@ function updateGameArea() {
         // (width, height, x, y, type) {
         lineIndex = Math.floor(Math.random()*lineChoice.length);
         line = lineChoice[lineIndex]
-
-        otherCars.push(new componentA(carWidth, carHeight, line, posisiy, "otherCar"));
+        random = Math.floor(Math.random()*2)
+        if (random === 1){
+            otherCars.push(new componentA(carWidth, carHeight, line, posisiy, "otherCar1"))
+        } else {
+            otherCars.push(new componentA(carWidth, carHeight, line, posisiy, "otherCar2"))
+        }
+        ;
     }
 
     // console.log(otherCars)
@@ -331,9 +367,11 @@ function updateGameArea() {
         otherCars.shift();
     }
 
+
     // if (myGameArea.frameNo > 2000 && everyinterval(1000)){
     //     myCoints.shift();
     // }
+
 
 
     // cek crashside
@@ -366,9 +404,37 @@ function updateGameArea() {
 ////
 }
 
+
+//// sound 
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }    
+}
+
+
 function everyinterval(n) {
     if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
     return false;
 }
 
+
+////modal
+
+
+// When the user clicks the button, open the modal 
+
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
 
