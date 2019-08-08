@@ -88,7 +88,6 @@ var myGameArea = {
     }
 }
 
-
 var myScoreArea = {
     canvas : document.createElement("canvas"),
     start : function() {
@@ -223,8 +222,8 @@ function updateGameArea() {
     for (i = 0; i < otherCars.length; i += 1) {
         if (myCar.crashWithOtherCars(otherCars[i])) {
             myMusic.stop()
-            
-            // elem.style.setProperty('display', 'flex', 'important');
+            clearInterval(myGameArea.interval);
+            // modal.style.setProperty('display', 'flex', 'important');
             return;
         } 
     }
