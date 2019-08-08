@@ -17,9 +17,6 @@ var span = document.getElementsByClassName("close")[0];
 //////////////////
 let img = document.getElementById("car");
 
-
-
-
 const canvasWidth = 610;
 const canvasHeight = 640;
 const carWidth = 100;
@@ -69,8 +66,6 @@ function startGame() {
       myScoreArea.start()
       myGameArea.start()
      
-      
-      
 }
 
 
@@ -219,32 +214,6 @@ function componentA(width, height, x, y, type) {
         }
     }
 
-    this.crashWithCoint = (coint) => {
-        let myleft = this.x;
-        let myright = this.x + (this.width);
-        let mytop = this.y;
-        let mybottom = this.y + (this.height);
-        let cointleft = coint.x;
-        let cointright = coint.x + (coint.width);
-        let cointtop = coint.y;
-        let cointbottom = coint.y + (coint.height);
-        let gap_y
-
-        if (this.y > coint.y){
-            gap_y= mytop - cointbottom
-        }
-        // lawan dikanan
-        if (this.x < coint.x){
-            if (myright  >= cointleft && gap_y <= 0){
-                return true
-            }
-        } else if (this.x >= coint.x) {
-            if (cointright >= myleft && gap_y <= 0){
-                return true
-            }
-        }
-        return false;
-    }
 }
 
 
@@ -265,6 +234,7 @@ function updateGameArea() {
             clearInterval(myGameArea.interval);
             modal = document.getElementById("myModal");
             modal.style.setProperty('display','block','important')
+            document.getElementById("score").innerHTML = "Your Score Is : " + (Math.floor(myGameArea.frameNo/50)+myGameArea.score)
             crashMusic.play()
             return;
         } 
@@ -273,7 +243,7 @@ function updateGameArea() {
 
     // check crash with coints
     for (j = 0; j < myCoints.length; j += 1) {
-        if (myCar.crashWithCoint(myCoints[j])) {
+        if (myCar.crashWithOtherCars(myCoints[j])) {
             myCoints.pop(j);
             coinMusic.play()
             myGameArea.score += 50;
@@ -437,7 +407,6 @@ function everyinterval(n) {
 
 
 // When the user clicks the button, open the modal 
-
 
 span.onclick = function() {
   modal.style.display = "none";
